@@ -1,0 +1,51 @@
+{
+  "name": "@tuft/view-responder",
+  "version": "1.0.0",
+  "description": "Template engine support for Tuft.",
+  "author": "Stuart Kennedy",
+  "license": "MIT",
+  "homepage": "https://github.com/tuftjs/view-responder",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuftjs/view-responder.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tuftjs/view-responder/issues"
+  },
+  "keywords": [
+    "tuft",
+    "tuftjs",
+    "node",
+    "web",
+    "framework",
+    "view",
+    "responder",
+    "ejs",
+    "pug"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "prepublishOnly": "npm run test && npm run build",
+    "build": "rm -rf ./lib && tsc -b"
+  },
+  "devDependencies": {
+    "@types/ejs": "^3.0.4",
+    "@types/jest": "^26.0.10",
+    "@types/node": "^14.6.0",
+    "@types/pug": "^2.0.4",
+    "@typescript-eslint/eslint-plugin": "^3.9.1",
+    "@typescript-eslint/parser": "^3.9.1",
+    "eslint": "^7.7.0",
+    "jest": "^26.4.1",
+    "ts-jest": "^26.2.0",
+    "tuft": "^2.0.0-beta.5",
+    "typescript": "^4.0.2"
+  },
+  "dependencies": {
+    "ejs": "^3.1.5",
+    "pug": "^3.0.0"
+  }
+}
