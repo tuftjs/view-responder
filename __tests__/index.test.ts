@@ -17,10 +17,6 @@ const mockExit = jest
   .spyOn(process, 'exit')
   .mockImplementation(() => undefined as never);
 
-beforeEach(() => {
-  jest.clearAllMocks();
-});
-
 afterAll(() => {
   jest.restoreAllMocks();
 });
