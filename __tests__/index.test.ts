@@ -1,8 +1,9 @@
 import { createViewResponder } from '../src';
 
 const MOCK_VIEW_DIR = 'mock-views';
-const MOCK_EJS_FILENAME = 'index.ejs';
-const MOCK_PUG_FILENAME = 'index.pug';
+const FILENAME_SANS_EXT = 'index';
+const EJS_FILENAME = 'index.ejs';
+const PUG_FILENAME = 'index.pug';
 
 const mockResponse: any = {
   writeHead: jest.fn(() => mockResponse),
@@ -79,7 +80,25 @@ describe('ejsResponder()', () => {
     describe('set to a filename', () => {
       test('calls the expected response methods', async () => {
         const tuftResponse = {
-          render: MOCK_EJS_FILENAME,
+          render: EJS_FILENAME,
+          data: { title: 'Tuft' },
+        };
+        const result = ejsResponder(tuftResponse, mockResponse);
+        const expectedBody = '<!DOCTYPE html>\n<html>\n<head>\n<title>Tuft</title>\n</head>\n<body>\n<h1>Tuft</h1>\n<p>Welcome to Tuft</p>\n</body>\n</html>';
+
+        await expect(result).resolves.toBeUndefined();
+        expect(mockResponse.writeHead).toHaveBeenCalledWith(200, {
+          ['content-type']: 'text/html; charset=UTF-8',
+          ['content-length']: expectedBody.length,
+        });
+        expect(mockResponse.end).toHaveBeenCalledWith(expectedBody);
+      });
+    });
+
+    describe('set to a filename without an extension', () => {
+      test('calls the expected response methods', async () => {
+        const tuftResponse = {
+          render: FILENAME_SANS_EXT,
           data: { title: 'Tuft' },
         };
         const result = ejsResponder(tuftResponse, mockResponse);
@@ -98,7 +117,7 @@ describe('ejsResponder()', () => {
       test('calls the expected response methods', async () => {
         const tuftResponse = {
           status: 200,
-          render: MOCK_EJS_FILENAME,
+          render: EJS_FILENAME,
           data: { title: 'Tuft' },
         };
         const result = ejsResponder(tuftResponse, mockResponse);
@@ -142,7 +161,25 @@ describe('pugResponder()', () => {
     describe('set to a filename', () => {
       test('calls the expected response methods', () => {
         const tuftResponse = {
-          render: MOCK_PUG_FILENAME,
+          render: PUG_FILENAME,
+          data: { title: 'Tuft' },
+        };
+        const result = pugResponder(tuftResponse, mockResponse);
+        const expectedBody = '<!DOCTYPE html><html><head><title>Tuft</title></head><body><h1>Tuft</h1><p>Welcome to Tuft</p></body></html>';
+
+        expect(result).toBeUndefined();
+        expect(mockResponse.writeHead).toHaveBeenCalledWith(200, {
+          ['content-type']: 'text/html; charset=UTF-8',
+          ['content-length']: expectedBody.length,
+        });
+        expect(mockResponse.end).toHaveBeenCalledWith(expectedBody);
+      });
+    });
+
+    describe('set to a filename without an extension', () => {
+      test('calls the expected response methods', () => {
+        const tuftResponse = {
+          render: FILENAME_SANS_EXT,
           data: { title: 'Tuft' },
         };
         const result = pugResponder(tuftResponse, mockResponse);
@@ -161,7 +198,7 @@ describe('pugResponder()', () => {
       test('calls the expected response methods', () => {
         const tuftResponse = {
           status: 200,
-          render: MOCK_PUG_FILENAME,
+          render: PUG_FILENAME,
           data: { title: 'Tuft' },
         };
         const result = pugResponder(tuftResponse, mockResponse);
