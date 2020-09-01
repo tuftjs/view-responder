@@ -7,7 +7,13 @@ import { join } from 'path';
 
 const DEFAULT_VIEW_DIR = '';
 const DEFAULT_HTTP_STATUS = 200;
+const EJS_EXTNAME = '.ejs';
+const PUG_EXTNAME = '.pug';
 const HTML_CONTENT_TYPE = 'text/html; charset=UTF-8';
+
+/**
+ * Returns a Tuft responder function for rendering the provided template engine type.
+ */
 
 export function createViewResponder(engine: 'ejs' | 'pug', viewDir = DEFAULT_VIEW_DIR) {
   if (engine !== 'ejs' && engine !== 'pug') {
@@ -27,7 +33,11 @@ export function createViewResponder(engine: 'ejs' | 'pug', viewDir = DEFAULT_VIE
       return tuftResponse;
     }
 
-    const filename = join(viewDir, render);
+    // Add '.ejs' file extension if it doesn't exist on the provided filename.
+    const filename = hasExtension(render, EJS_EXTNAME)
+      ? join(viewDir, render)
+      : join(viewDir, render + EJS_EXTNAME);
+
     const body = await renderEjsFile(filename, data, {
       rmWhitespace: true,
       cache: true,
@@ -52,7 +62,10 @@ export function createViewResponder(engine: 'ejs' | 'pug', viewDir = DEFAULT_VIE
       return tuftResponse;
     }
 
-    const filename = join(viewDir, render);
+    // Add '.pug' file extension if it doesn't exist on the provided filename.
+    const filename = hasExtension(render, PUG_EXTNAME)
+      ? join(viewDir, render)
+      : join(viewDir, render + PUG_EXTNAME);
 
     data.filename = render; // Required for caching to work
     data.cache = true;
@@ -68,4 +81,15 @@ export function createViewResponder(engine: 'ejs' | 'pug', viewDir = DEFAULT_VIE
   }
 
   return engine === 'ejs' ? ejsResponder : pugResponder;
+}
+
+/**
+ * Returns true if the provided filename ends with the provided extension, or false otherwise.
+ */
+
+function hasExtension(filename: string, extname: string) {
+  return (
+    filename.length > extname.length &&
+    filename.indexOf(extname) === filename.length - extname.length
+  );
 }
