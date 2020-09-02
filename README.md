@@ -56,12 +56,11 @@ To render this view, provide a Tuft response object with a `render` property, pa
 
   app.set('GET /', () => {
     return {
-      render: 'views/index.ejs',
+      render: 'views/index', // File extension is not required
       data: { title: 'Tuft' }
     }
   })
 ```
-
 The example above will respond with the following HTML:
 
 ```html
@@ -82,7 +81,20 @@ The example above will respond with the following HTML:
 
 Pass the name of the template engine you want to utilize as the first argument. There are currently only two engines supported: `'ejs'` and `'pug'`.
 
-You can pass a base directory for your view files as an optional second argument. For example, if your index view is located at `'views/index.ejs'`, you can pass `'views'` as the second argument. You then only have to refer to `'index.ejs'` in your Tuft response.
+You can pass a base directory for your view files as an optional second argument. For example, if your index view is located at `'views/index.ejs'`, you can pass `'views'` as the second argument. You then only have to refer to the `'index.ejs'` file in your Tuft response.
+
+```js
+  const app = tuft({
+    responders: [createViewResponder('ejs', 'views')] // Include base directory 'views'
+  })
+
+  app.set('GET /', () => {
+    return {
+      render: 'index', // Render 'views/index.ejs'
+      data: { title: 'Tuft' }
+    }
+  })
+```
 
 View Responder recognizes the following two properties in a response object:
 
