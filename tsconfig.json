@@ -16,6 +16,12 @@
     "resolveJsonModule": true,
     "lib": [
       "ES2019"
+    ],
+    "types": [
+      "node",
+      "jest",
+      "ejs",
+      "pug"
     ]
   },
   "include": [
