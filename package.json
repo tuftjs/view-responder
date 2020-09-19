@@ -27,7 +27,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "test": "jest",
-    "test:coverage": "jest --coverage",
+    "test:ci": "jest --coverage",
     "prepublishOnly": "npm run test && npm run build",
     "build": "rm -rf ./lib && tsc -b"
   },
