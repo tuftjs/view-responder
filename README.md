@@ -1,6 +1,6 @@
 # View Responder
 
-![Node.js CI](https://github.com/tuftjs/view-responder/workflows/Node.js%20CI/badge.svg)
+![CI](https://github.com/tuftjs/view-responder/workflows/Node.js%20CI/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/tuftjs/view-responder/badge.svg)](https://coveralls.io/github/tuftjs/view-responder)
 [![Known Vulnerabilities](https://snyk.io/test/github/tuftjs/view-responder/badge.svg?targetFile=package.json)](https://snyk.io/test/github/tuftjs/view-responder?targetFile=package.json)
 
