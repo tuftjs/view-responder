@@ -3,6 +3,7 @@
 ![CI](https://github.com/tuftjs/view-responder/workflows/Node.js%20CI/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/tuftjs/view-responder/badge.svg)](https://coveralls.io/github/tuftjs/view-responder)
 [![Known Vulnerabilities](https://snyk.io/test/github/tuftjs/view-responder/badge.svg?targetFile=package.json)](https://snyk.io/test/github/tuftjs/view-responder?targetFile=package.json)
+![npm](https://img.shields.io/npm/v/@tuft/view-responder)
 
 View Responder is a first-party extension for Tuft that allows the use of template engines for rendering views. At present, the following template engines are supported:
 
