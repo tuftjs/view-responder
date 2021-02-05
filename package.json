@@ -1,6 +1,6 @@
 {
   "name": "@tuft/view-responder",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "Template engine support for Tuft.",
   "author": "Stuart Kennedy",
   "license": "MIT",
