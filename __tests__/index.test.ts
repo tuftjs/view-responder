@@ -1,4 +1,4 @@
-import { createViewResponder } from '../src';
+import { createEjsResponder, createPugResponder } from '../src';
 
 const MOCK_VIEW_DIR = 'mock-views';
 const FILENAME_SANS_EXT = 'index';
@@ -10,46 +10,23 @@ const mockResponse: any = {
   end: jest.fn(),
 };
 
-const mockConsoleError = jest
-  .spyOn(console, 'error')
-  .mockImplementation(() => { });
-
-const mockExit = jest
-  .spyOn(process, 'exit')
-  .mockImplementation(() => undefined as never);
-
-afterAll(() => {
-  jest.restoreAllMocks();
-});
-
 /**
  * createViewResponder()
  */
 
-describe('Calling createViewResponder(\'ejs\')', () => {
-  test('returns a function named \'ejsResponder\'', () => {
-    const result = createViewResponder('ejs');
+describe('Calling createEjsResponder()', () => {
+  test('returns a function named \'ejsResponder\'', async () => {
+    const result = await createEjsResponder();
     expect(typeof result).toBe('function');
     expect(result.name).toBe('ejsResponder');
   });
 });
 
-describe('Calling createViewResponder(\'pug\')', () => {
-  test('returns a function named \'pugResponder\'', () => {
-    const result = createViewResponder('pug');
+describe('Calling createPugResponder()', () => {
+  test('returns a function named \'pugResponder\'', async () => {
+    const result = await createPugResponder();
     expect(typeof result).toBe('function');
     expect(result.name).toBe('pugResponder');
-  });
-});
-
-describe('Calling createViewResponder() without passing a valid argument', () => {
-  test('logs an error and exits', () => {
-    const expectedError = Error('\'engine\' parameter must be either \'ejs\' or \'pug\'');
-    const expectedErrorCode = 1;
-    //@ts-expect-error
-    createViewResponder();
-    expect(mockConsoleError).toHaveBeenCalledWith(expectedError);
-    expect(mockExit).toHaveBeenCalledWith(expectedErrorCode);
   });
 });
 
@@ -57,11 +34,10 @@ describe('Calling createViewResponder() without passing a valid argument', () =>
  * ejsResponder()
  */
 
-const ejsResponder = createViewResponder('ejs', MOCK_VIEW_DIR);
-
 describe('ejsResponder()', () => {
   describe('When passed an empty response object', () => {
     test('returns that response object', async () => {
+      const ejsResponder = await createEjsResponder(MOCK_VIEW_DIR);
       const tuftResponse = {};
       const result = ejsResponder(tuftResponse, mockResponse);
       await expect(result).resolves.toBe(tuftResponse);
@@ -71,6 +47,7 @@ describe('ejsResponder()', () => {
   describe('When passed a response object that contains a \'render\' property', () => {
     describe('set to an invalid type', () => {
       test('returns that response object', async () => {
+        const ejsResponder = await createEjsResponder(MOCK_VIEW_DIR);
         const tuftResponse = { render: 42 };
         const result = ejsResponder(tuftResponse, mockResponse);
         await expect(result).resolves.toBe(tuftResponse);
@@ -79,6 +56,7 @@ describe('ejsResponder()', () => {
 
     describe('set to a filename', () => {
       test('calls the expected response methods', async () => {
+        const ejsResponder = await createEjsResponder(MOCK_VIEW_DIR);
         const tuftResponse = {
           render: EJS_FILENAME,
           data: { title: 'Tuft' },
@@ -97,6 +75,7 @@ describe('ejsResponder()', () => {
 
     describe('set to a filename without an extension', () => {
       test('calls the expected response methods', async () => {
+        const ejsResponder = await createEjsResponder(MOCK_VIEW_DIR);
         const tuftResponse = {
           render: FILENAME_SANS_EXT,
           data: { title: 'Tuft' },
@@ -115,6 +94,7 @@ describe('ejsResponder()', () => {
 
     describe('and a \'status\' property', () => {
       test('calls the expected response methods', async () => {
+        const ejsResponder = await createEjsResponder(MOCK_VIEW_DIR);
         const tuftResponse = {
           status: 200,
           render: EJS_FILENAME,
@@ -138,11 +118,10 @@ describe('ejsResponder()', () => {
  * pugResponder()
  */
 
-const pugResponder = createViewResponder('pug', MOCK_VIEW_DIR);
-
 describe('pugResponder()', () => {
   describe('When passed an empty response object', () => {
-    test('returns that response object', () => {
+    test('returns that response object', async () => {
+      const pugResponder = await createPugResponder(MOCK_VIEW_DIR);
       const tuftResponse = {};
       const result = pugResponder(tuftResponse, mockResponse);
       expect(result).toBe(tuftResponse);
@@ -151,7 +130,8 @@ describe('pugResponder()', () => {
 
   describe('When passed a response object that contains a \'render\' property', () => {
     describe('set to an invalid type', () => {
-      test('returns that response object', () => {
+      test('returns that response object', async () => {
+        const pugResponder = await createPugResponder(MOCK_VIEW_DIR);
         const tuftResponse = { render: 42 };
         const result = pugResponder(tuftResponse, mockResponse);
         expect(result).toBe(tuftResponse);
@@ -159,7 +139,8 @@ describe('pugResponder()', () => {
     });
 
     describe('set to a filename', () => {
-      test('calls the expected response methods', () => {
+      test('calls the expected response methods', async () => {
+        const pugResponder = await createPugResponder(MOCK_VIEW_DIR);
         const tuftResponse = {
           render: PUG_FILENAME,
           data: { title: 'Tuft' },
@@ -177,7 +158,8 @@ describe('pugResponder()', () => {
     });
 
     describe('set to a filename without an extension', () => {
-      test('calls the expected response methods', () => {
+      test('calls the expected response methods', async () => {
+        const pugResponder = await createPugResponder(MOCK_VIEW_DIR);
         const tuftResponse = {
           render: FILENAME_SANS_EXT,
           data: { title: 'Tuft' },
@@ -195,7 +177,8 @@ describe('pugResponder()', () => {
     });
 
     describe('and a \'status\' property', () => {
-      test('calls the expected response methods', () => {
+      test('calls the expected response methods', async () => {
+        const pugResponder = await createPugResponder(MOCK_VIEW_DIR);
         const tuftResponse = {
           status: 200,
           render: PUG_FILENAME,

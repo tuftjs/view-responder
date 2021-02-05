@@ -1,8 +1,6 @@
 import type { ServerResponse } from 'http';
 import type { TuftResponse } from 'tuft';
 
-import { renderFile as renderEjsFile } from 'ejs';
-import { renderFile as renderPugFile } from 'pug';
 import { join } from 'path';
 
 const DEFAULT_VIEW_DIR = '';
@@ -12,17 +10,13 @@ const PUG_EXTNAME = '.pug';
 const HTML_CONTENT_TYPE = 'text/html; charset=UTF-8';
 
 /**
- * Returns a Tuft responder function for rendering the provided template engine type.
+ * Returns a Tuft responder function for rendering views using the EJS engine.
  */
 
-export function createViewResponder(engine: 'ejs' | 'pug', viewDir = DEFAULT_VIEW_DIR) {
-  if (engine !== 'ejs' && engine !== 'pug') {
-    const err = Error('\'engine\' parameter must be either \'ejs\' or \'pug\'');
-    console.error(err);
-    process.exit(1);
-  }
+export async function createEjsResponder(viewDir = DEFAULT_VIEW_DIR) {
+  const { renderFile } = await import('ejs');
 
-  async function ejsResponder(
+  return async function ejsResponder(
     tuftResponse: TuftResponse,
     response: ServerResponse,
   ) {
@@ -38,7 +32,7 @@ export function createViewResponder(engine: 'ejs' | 'pug', viewDir = DEFAULT_VIE
       ? join(viewDir, render)
       : join(viewDir, render + EJS_EXTNAME);
 
-    const body = await renderEjsFile(filename, data, {
+    const body = await renderFile(filename, data, {
       rmWhitespace: true,
       cache: true,
     });
@@ -49,9 +43,17 @@ export function createViewResponder(engine: 'ejs' | 'pug', viewDir = DEFAULT_VIE
         ['content-length']: Buffer.byteLength(body),
       })
       .end(body);
-  }
+  };
+}
 
-  function pugResponder(
+/**
+ * Returns a Tuft responder function for rendering views using the Pug engine.
+ */
+
+export async function createPugResponder(viewDir = DEFAULT_VIEW_DIR) {
+  const { renderFile } = await import('pug');
+
+  return function pugResponder(
     tuftResponse: TuftResponse,
     response: ServerResponse,
   ) {
@@ -70,7 +72,7 @@ export function createViewResponder(engine: 'ejs' | 'pug', viewDir = DEFAULT_VIE
     data.filename = render; // Required for caching to work
     data.cache = true;
 
-    const body = renderPugFile(filename, data);
+    const body = renderFile(filename, data);
 
     response
       .writeHead(status ?? DEFAULT_HTTP_STATUS, {
@@ -78,9 +80,7 @@ export function createViewResponder(engine: 'ejs' | 'pug', viewDir = DEFAULT_VIE
         ['content-length']: Buffer.byteLength(body),
       })
       .end(body);
-  }
-
-  return engine === 'ejs' ? ejsResponder : pugResponder;
+  };
 }
 
 /**
