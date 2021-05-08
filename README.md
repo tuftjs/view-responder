@@ -47,7 +47,7 @@ For example, to enable the EJS template engine, call the `createEjsResponder` fu
   // index.js
 
   const { tuft } = require('tuft')
-  const { createViewResponder } = require('@tuft/view-responder')
+  const { createEjsResponder } = require('@tuft/view-responder')
 
   const app = tuft({
     responders: [await createEjsResponder()]
